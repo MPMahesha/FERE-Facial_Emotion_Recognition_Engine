@@ -1,0 +1,12 @@
+{
+  "name": "facial-emotion-recognition-engine",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Real-Time Facial Emotion Recogniser in the Browser",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "preview": "npm --prefix frontend run preview",
+    "backend": "python -m uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000"
+  }
+}
