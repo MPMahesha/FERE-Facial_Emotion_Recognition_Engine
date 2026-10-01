@@ -1,0 +1,34 @@
+[
+  {
+    "model": "Custom EmotionCNN",
+    "parameters": 5093255,
+    "size_mb": 19.43,
+    "latency_ms": 2.3,
+    "cpu_fps": 435.1,
+    "val_acc_sample": 11.46
+  },
+  {
+    "model": "ResNet-18 (Transfer)",
+    "parameters": 11173831,
+    "size_mb": 42.62,
+    "latency_ms": 7.48,
+    "cpu_fps": 133.7,
+    "val_acc_sample": 0.68
+  },
+  {
+    "model": "EfficientNet-B0 (Transfer)",
+    "parameters": 4015939,
+    "size_mb": 15.32,
+    "latency_ms": 10.63,
+    "cpu_fps": 94.1,
+    "val_acc_sample": 5.31
+  },
+  {
+    "model": "Small ViT (Vision Transformer)",
+    "parameters": 544263,
+    "size_mb": 2.08,
+    "latency_ms": 1.53,
+    "cpu_fps": 653.3,
+    "val_acc_sample": 32.03
+  }
+]
