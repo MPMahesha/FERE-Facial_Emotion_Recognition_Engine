@@ -26,21 +26,29 @@ from config import (
 class FER2013Dataset(Dataset):
     """
     Dataset loader for 48x48 Grayscale Facial Emotion images.
+    Supports in-memory caching for blazingly fast training throughput.
     """
-    def __init__(self, image_paths: list[Path], labels: list[int], transform=None):
+    def __init__(self, image_paths: list[Path], labels: list[int], transform=None, preload: bool = True):
         self.image_paths = image_paths
         self.labels = labels
         self.transform = transform
+        self.preload = preload
+        self.cached_images = None
+
+        if self.preload:
+            # Pre-load all 48x48 images into memory (takes only ~60MB RAM)
+            self.cached_images = [np.array(Image.open(p).convert("L"), dtype=np.uint8) for p in image_paths]
 
     def __len__(self) -> int:
         return len(self.image_paths)
 
     def __getitem__(self, idx: int) -> tuple[torch.Tensor, int]:
-        image_path = self.image_paths[idx]
-        label = self.labels[idx]
+        if self.cached_images is not None:
+            image = Image.fromarray(self.cached_images[idx])
+        else:
+            image = Image.open(self.image_paths[idx]).convert("L")
 
-        # Load as grayscale PIL image (48x48)
-        image = Image.open(image_path).convert("L")
+        label = self.labels[idx]
 
         if self.transform:
             image = self.transform(image)
