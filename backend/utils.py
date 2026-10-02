@@ -49,7 +49,10 @@ def detect_faces(image: np.ndarray) -> tuple[list[dict], list[np.ndarray]]:
         - boxes: list of bounding box dicts with x, y, width, height
         - face_crops: list of cropped face sub-images (BGR)
     """
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    if len(image.shape) == 3:
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    else:
+        gray = image
 
     # Detect faces with standard scaling and neighbor parameters
     detected = face_cascade.detectMultiScale(
@@ -73,4 +76,12 @@ def detect_faces(image: np.ndarray) -> tuple[list[dict], list[np.ndarray]]:
         cropped = image[y:y + h, x:x + w]
         face_crops.append(cropped)
 
+    # Fallback for pre-cropped face images (e.g. FER-2013 benchmark samples <= 128x128)
+    if not boxes:
+        h, w = image.shape[:2]
+        if h <= 128 and w <= 128:
+            boxes.append({"x": 0, "y": 0, "width": int(w), "height": int(h)})
+            face_crops.append(image)
+
     return boxes, face_crops
+

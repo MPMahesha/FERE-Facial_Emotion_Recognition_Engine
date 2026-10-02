@@ -1,0 +1,121 @@
+{
+  "model": "EmotionCNN",
+  "parameters": 5093255,
+  "size_mb": 19.43,
+  "test_accuracy": 40.16,
+  "macro_f1": 32.71,
+  "weighted_f1": 36.04,
+  "mean_latency_ms": 2.56,
+  "cpu_fps": 390.2,
+  "target_accuracy_65_met": false,
+  "target_fps_15_met": true,
+  "class_report": {
+    "angry": {
+      "precision": 0.2077922077922078,
+      "recall": 0.016701461377870562,
+      "f1-score": 0.030917874396135265,
+      "support": 958.0
+    },
+    "disgust": {
+      "precision": 0.18407960199004975,
+      "recall": 0.3333333333333333,
+      "f1-score": 0.23717948717948717,
+      "support": 111.0
+    },
+    "fear": {
+      "precision": 0.2292418772563177,
+      "recall": 0.1240234375,
+      "f1-score": 0.16096324461343473,
+      "support": 1024.0
+    },
+    "happy": {
+      "precision": 0.6557575757575758,
+      "recall": 0.6099210822998873,
+      "f1-score": 0.6320093457943925,
+      "support": 1774.0
+    },
+    "neutral": {
+      "precision": 0.28532423208191127,
+      "recall": 0.6780210867802109,
+      "f1-score": 0.40163343742493396,
+      "support": 1233.0
+    },
+    "sad": {
+      "precision": 0.20815752461322082,
+      "recall": 0.11868484362469928,
+      "f1-score": 0.1511746680286006,
+      "support": 1247.0
+    },
+    "surprise": {
+      "precision": 0.6037914691943128,
+      "recall": 0.766546329723225,
+      "f1-score": 0.6755037115588547,
+      "support": 831.0
+    },
+    "accuracy": 0.4016439119531903,
+    "macro avg": {
+      "precision": 0.33916349838365656,
+      "recall": 0.37817593923417514,
+      "f1-score": 0.327054538427977,
+      "support": 7178.0
+    },
+    "weighted avg": {
+      "precision": 0.38042397810537704,
+      "recall": 0.4016439119531903,
+      "f1-score": 0.36041092398353963,
+      "support": 7178.0
+    }
+  },
+  "sample_misclassifications": [
+    {
+      "actual": "angry",
+      "predicted": "happy",
+      "confidence": 0.1699
+    },
+    {
+      "actual": "angry",
+      "predicted": "neutral",
+      "confidence": 0.1757
+    },
+    {
+      "actual": "angry",
+      "predicted": "fear",
+      "confidence": 0.2151
+    },
+    {
+      "actual": "angry",
+      "predicted": "neutral",
+      "confidence": 0.1857
+    },
+    {
+      "actual": "angry",
+      "predicted": "disgust",
+      "confidence": 0.2264
+    },
+    {
+      "actual": "angry",
+      "predicted": "neutral",
+      "confidence": 0.1781
+    },
+    {
+      "actual": "angry",
+      "predicted": "neutral",
+      "confidence": 0.1857
+    },
+    {
+      "actual": "angry",
+      "predicted": "neutral",
+      "confidence": 0.1857
+    },
+    {
+      "actual": "angry",
+      "predicted": "happy",
+      "confidence": 0.1983
+    },
+    {
+      "actual": "angry",
+      "predicted": "disgust",
+      "confidence": 0.2595
+    }
+  ]
+}
