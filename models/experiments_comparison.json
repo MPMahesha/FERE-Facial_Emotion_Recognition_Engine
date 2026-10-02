@@ -1,0 +1,52 @@
+[
+  {
+    "experiment": "Experiment A (Baseline)",
+    "description": "Old 3-conv CNN + Raw Inverse Weights (Disgust=9.42) + Basic Augmentation",
+    "parameters": 5093255,
+    "size_mb": 19.43,
+    "train_acc": 30.14,
+    "val_acc": 39.68,
+    "val_loss": 1.6608,
+    "configuration": "Adam lr=1e-3, Raw inverse class weights, 15 epochs"
+  },
+  {
+    "experiment": "Experiment B (Corrected Pipeline)",
+    "description": "Baseline CNN + Clean Preprocessing + Unweighted Loss (No extreme disgust weight)",
+    "parameters": 5093255,
+    "size_mb": 19.43,
+    "train_acc": 21.93,
+    "val_acc": 24.68677494199536,
+    "val_loss": 1.8202,
+    "configuration": "Adam lr=1e-3, Unweighted CrossEntropyLoss, No Aug"
+  },
+  {
+    "experiment": "Experiment C (Pipeline + Sqrt Weights)",
+    "description": "Baseline CNN + Sqrt Damped Class Weights (Disgust ~2.4x)",
+    "parameters": 5093255,
+    "size_mb": 19.43,
+    "train_acc": 23.52,
+    "val_acc": 26.890951276102086,
+    "val_loss": 1.8335,
+    "configuration": "Adam lr=1e-3, Sqrt Damped Class Weights, No Aug"
+  },
+  {
+    "experiment": "Experiment D (Pipeline + Weights + Aug)",
+    "description": "Baseline CNN + Sqrt Weights + Realistic Facial Augmentation",
+    "parameters": 5093255,
+    "size_mb": 19.43,
+    "train_acc": 19.8,
+    "val_acc": 20.696055684454755,
+    "val_loss": 1.886,
+    "configuration": "Adam lr=1e-3, Sqrt Class Weights, Realistic Augmentation"
+  },
+  {
+    "experiment": "Experiment E (Final Improved CNN)",
+    "description": "6-Conv VGG CNN + BatchNorm + Spatial Pool + Sqrt Weights + Augmentation",
+    "parameters": 2312007,
+    "size_mb": 8.82,
+    "train_acc": 65.84,
+    "val_acc": 64.94,
+    "val_loss": 0.9769,
+    "configuration": "AdamW lr=1e-3 -> CosineAnnealing, Sqrt Weights, Augmentation, 6-Conv VGG Architecture, 21 epochs"
+  }
+]

@@ -62,14 +62,14 @@ def train_model(epochs: int = 15, batch_size: int = BATCH_SIZE, learning_rate: f
     for i, name in enumerate(EMOTIONS):
         print(f"  {name:10s}: {class_weights[i].item():.4f}")
 
-    # 2. Instantiate CNN architecture
+    torch.set_num_threads(12)
     model = EmotionCNN(num_classes=NUM_CLASSES).to(device)
 
-    # 3. Loss function with class weights
+    # 3. Loss function with square-root damped class weights
     criterion = nn.CrossEntropyLoss(weight=class_weights)
 
-    # 4. Adam optimizer and learning rate scheduler
-    optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=1e-4)
+    # 4. AdamW optimizer and learning rate scheduler
+    optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=1e-3)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(
         optimizer, mode="max", factor=0.5, patience=2, min_lr=1e-5
     )

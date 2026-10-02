@@ -1,121 +1,134 @@
 {
   "model": "EmotionCNN",
-  "parameters": 5093255,
-  "size_mb": 19.43,
-  "test_accuracy": 40.16,
-  "macro_f1": 32.71,
-  "weighted_f1": 36.04,
-  "mean_latency_ms": 2.56,
-  "cpu_fps": 390.2,
-  "target_accuracy_65_met": false,
+  "parameters": 2312007,
+  "size_mb": 8.82,
+  "test_accuracy": 66.24,
+  "macro_f1": 62.91,
+  "weighted_f1": 65.91,
+  "mean_latency_ms": 3.64,
+  "cpu_fps": 274.8,
+  "target_accuracy_65_met": true,
   "target_fps_15_met": true,
   "class_report": {
     "angry": {
-      "precision": 0.2077922077922078,
-      "recall": 0.016701461377870562,
-      "f1-score": 0.030917874396135265,
+      "precision": 0.5941422594142259,
+      "recall": 0.592901878914405,
+      "f1-score": 0.593521421107628,
       "support": 958.0
     },
     "disgust": {
-      "precision": 0.18407960199004975,
-      "recall": 0.3333333333333333,
-      "f1-score": 0.23717948717948717,
+      "precision": 0.42934782608695654,
+      "recall": 0.7117117117117117,
+      "f1-score": 0.535593220338983,
       "support": 111.0
     },
     "fear": {
-      "precision": 0.2292418772563177,
-      "recall": 0.1240234375,
-      "f1-score": 0.16096324461343473,
+      "precision": 0.5537414965986395,
+      "recall": 0.3974609375,
+      "f1-score": 0.46276293348493464,
       "support": 1024.0
     },
     "happy": {
-      "precision": 0.6557575757575758,
-      "recall": 0.6099210822998873,
-      "f1-score": 0.6320093457943925,
+      "precision": 0.8811188811188811,
+      "recall": 0.8523111612175873,
+      "f1-score": 0.8664756446991404,
       "support": 1774.0
     },
     "neutral": {
-      "precision": 0.28532423208191127,
-      "recall": 0.6780210867802109,
-      "f1-score": 0.40163343742493396,
+      "precision": 0.5850388143966125,
+      "recall": 0.6723438767234388,
+      "f1-score": 0.6256603773584906,
       "support": 1233.0
     },
     "sad": {
-      "precision": 0.20815752461322082,
-      "recall": 0.11868484362469928,
-      "f1-score": 0.1511746680286006,
+      "precision": 0.5447087776866284,
+      "recall": 0.5324779470729751,
+      "f1-score": 0.5385239253852393,
       "support": 1247.0
     },
     "surprise": {
-      "precision": 0.6037914691943128,
-      "recall": 0.766546329723225,
-      "f1-score": 0.6755037115588547,
+      "precision": 0.7318611987381703,
+      "recall": 0.8375451263537906,
+      "f1-score": 0.7811447811447811,
       "support": 831.0
     },
-    "accuracy": 0.4016439119531903,
+    "accuracy": 0.6624407913067707,
     "macro avg": {
-      "precision": 0.33916349838365656,
-      "recall": 0.37817593923417514,
-      "f1-score": 0.327054538427977,
+      "precision": 0.617137036291445,
+      "recall": 0.6566789484991299,
+      "f1-score": 0.6290974719313139,
       "support": 7178.0
     },
     "weighted avg": {
-      "precision": 0.38042397810537704,
-      "recall": 0.4016439119531903,
-      "f1-score": 0.36041092398353963,
+      "precision": 0.6625471497511912,
+      "recall": 0.6624407913067707,
+      "f1-score": 0.6591183198430354,
       "support": 7178.0
     }
   },
-  "sample_misclassifications": [
-    {
-      "actual": "angry",
-      "predicted": "happy",
-      "confidence": 0.1699
-    },
-    {
-      "actual": "angry",
-      "predicted": "neutral",
-      "confidence": 0.1757
-    },
-    {
-      "actual": "angry",
-      "predicted": "fear",
-      "confidence": 0.2151
-    },
-    {
-      "actual": "angry",
-      "predicted": "neutral",
-      "confidence": 0.1857
-    },
-    {
-      "actual": "angry",
-      "predicted": "disgust",
-      "confidence": 0.2264
-    },
-    {
-      "actual": "angry",
-      "predicted": "neutral",
-      "confidence": 0.1781
-    },
-    {
-      "actual": "angry",
-      "predicted": "neutral",
-      "confidence": 0.1857
-    },
-    {
-      "actual": "angry",
-      "predicted": "neutral",
-      "confidence": 0.1857
-    },
-    {
-      "actual": "angry",
-      "predicted": "happy",
-      "confidence": 0.1983
-    },
-    {
-      "actual": "angry",
-      "predicted": "disgust",
-      "confidence": 0.2595
-    }
+  "confusion_matrix": [
+    [
+      568,
+      42,
+      81,
+      33,
+      108,
+      101,
+      25
+    ],
+    [
+      20,
+      79,
+      5,
+      1,
+      2,
+      3,
+      1
+    ],
+    [
+      116,
+      21,
+      407,
+      25,
+      109,
+      214,
+      132
+    ],
+    [
+      31,
+      8,
+      21,
+      1512,
+      100,
+      49,
+      53
+    ],
+    [
+      79,
+      11,
+      53,
+      67,
+      829,
+      171,
+      23
+    ],
+    [
+      123,
+      18,
+      122,
+      50,
+      249,
+      664,
+      21
+    ],
+    [
+      19,
+      5,
+      46,
+      28,
+      20,
+      17,
+      696
+    ]
   ]
 }

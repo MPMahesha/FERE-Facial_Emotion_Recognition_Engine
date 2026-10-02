@@ -62,16 +62,24 @@ class FER2013Dataset(Dataset):
 # DATA TRANSFORMS & AUGMENTATION
 # ============================================================
 
-def get_transforms():
+def get_transforms(augment: bool = True):
     """
-    Data augmentation for training (horizontal flip and small rotation).
+    Data augmentation for training (realistic facial transformations:
+    horizontal flip, small rotation, mild crop/translation, subtle lighting).
     Deterministic tensor conversion for validation and testing.
     """
-    train_transform = transforms.Compose([
-        transforms.RandomHorizontalFlip(p=0.5),
-        transforms.RandomRotation(degrees=10),
-        transforms.ToTensor(),
-    ])
+    if augment:
+        train_transform = transforms.Compose([
+            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.RandomRotation(degrees=10),
+            transforms.RandomCrop(48, padding=4, padding_mode="reflect"),
+            transforms.ColorJitter(brightness=0.15, contrast=0.15),
+            transforms.ToTensor(),
+        ])
+    else:
+        train_transform = transforms.Compose([
+            transforms.ToTensor(),
+        ])
 
     eval_transform = transforms.Compose([
         transforms.ToTensor(),
@@ -128,15 +136,26 @@ def load_split_paths(validation_split: float = VALIDATION_SPLIT, random_seed: in
 # CLASS WEIGHT COMPUTATION (FOR DISGUST & IMBALANCE)
 # ============================================================
 
-def compute_class_weights(labels: list[int], num_classes: int = NUM_CLASSES) -> torch.Tensor:
+def compute_class_weights(labels: list[int], num_classes: int = NUM_CLASSES, method: str = "sqrt") -> torch.Tensor:
     """
-    Computes inverse frequency class weights:
-    weight_c = total_samples / (num_classes * class_count_c)
-    Helps address class imbalance, particularly for the 'disgust' class.
+    Computes class weights to address class imbalance without pathological gradients.
+    - 'sqrt': square-root damped inverse weights (w_c = sqrt(N_median / N_c)), normalized so mean is 1.0.
+              Keeps disgust weight bounded (~2.4-3.0) rather than extreme (>9.0).
+    - 'raw': raw inverse frequency (total / (C * count_c)).
+    - 'none': uniform weights (all 1.0).
     """
-    counts = np.bincount(labels, minlength=num_classes)
-    total_samples = len(labels)
-    weights = total_samples / (num_classes * counts.astype(np.float32))
+    counts = np.bincount(labels, minlength=num_classes).astype(np.float32)
+    if method == "sqrt":
+        median_count = np.median(counts)
+        weights = np.sqrt(median_count / np.maximum(counts, 1.0))
+        weights = weights / np.mean(weights)
+    elif method == "raw":
+        total_samples = len(labels)
+        weights = total_samples / (num_classes * np.maximum(counts, 1.0))
+    elif method == "none":
+        weights = np.ones(num_classes, dtype=np.float32)
+    else:
+        weights = np.ones(num_classes, dtype=np.float32)
     return torch.tensor(weights, dtype=torch.float32)
 
 
@@ -148,13 +167,15 @@ def get_dataloaders(
     batch_size: int = BATCH_SIZE,
     num_workers: int = 0,
     validation_split: float = VALIDATION_SPLIT,
-    random_seed: int = RANDOM_SEED
+    random_seed: int = RANDOM_SEED,
+    augment: bool = True,
+    weight_method: str = "sqrt"
 ):
     """
     Constructs PyTorch DataLoaders for train, val, and test splits.
     """
     (train_p, train_y), (val_p, val_y), (test_p, test_y) = load_split_paths(validation_split, random_seed)
-    train_tf, eval_tf = get_transforms()
+    train_tf, eval_tf = get_transforms(augment=augment)
 
     train_dataset = FER2013Dataset(train_p, train_y, transform=train_tf)
     val_dataset = FER2013Dataset(val_p, val_y, transform=eval_tf)
@@ -184,7 +205,7 @@ def get_dataloaders(
         pin_memory=pin_mem
     )
 
-    class_weights = compute_class_weights(train_y, NUM_CLASSES)
+    class_weights = compute_class_weights(train_y, NUM_CLASSES, method=weight_method)
 
     return {
         "train_loader": train_loader,

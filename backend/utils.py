@@ -65,6 +65,7 @@ def detect_faces(image: np.ndarray) -> tuple[list[dict], list[np.ndarray]]:
     boxes = []
     face_crops = []
 
+    img_h, img_w = image.shape[:2]
     for (x, y, w, h) in detected:
         boxes.append({
             "x": int(x),
@@ -72,8 +73,14 @@ def detect_faces(image: np.ndarray) -> tuple[list[dict], list[np.ndarray]]:
             "width": int(w),
             "height": int(h)
         })
-        # Crop the detected face region
-        cropped = image[y:y + h, x:x + w]
+        # Add natural margin around crop to include full forehead and chin (matching FER-2013)
+        pad_y = int(0.10 * h)
+        pad_x = int(0.05 * w)
+        y1 = max(0, y - pad_y)
+        y2 = min(img_h, y + h + pad_y)
+        x1 = max(0, x - pad_x)
+        x2 = min(img_w, x + w + pad_x)
+        cropped = image[y1:y2, x1:x2]
         face_crops.append(cropped)
 
     # Fallback for pre-cropped face images (e.g. FER-2013 benchmark samples <= 128x128)

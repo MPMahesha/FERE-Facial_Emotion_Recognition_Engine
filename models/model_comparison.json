@@ -1,11 +1,11 @@
 [
   {
-    "model": "Custom EmotionCNN",
-    "parameters": 5093255,
-    "size_mb": 19.43,
-    "latency_ms": 2.3,
-    "cpu_fps": 435.1,
-    "val_acc_sample": 11.46
+    "model": "Custom EmotionCNN (VGG-Style Scratch)",
+    "parameters": 2312007,
+    "size_mb": 8.82,
+    "latency_ms": 2.15,
+    "cpu_fps": 465.1,
+    "val_accuracy": 64.94
   },
   {
     "model": "ResNet-18 (Transfer)",
