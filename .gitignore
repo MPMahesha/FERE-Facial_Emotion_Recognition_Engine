@@ -17,7 +17,13 @@ dist-ssr/
 # PyTorch models / weight dumps (keep dir structure)
 models/*.pth
 models/*.pt
+!models/emotion_cnn.pth
 !models/.gitkeep
+
+# Datasets (FER-2013 is stored locally and must never be committed)
+data/
+archive/
+*.csv
 
 # IDE / OS
 .vscode/
