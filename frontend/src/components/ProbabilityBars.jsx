@@ -1,17 +1,17 @@
 import React from 'react';
 
 // ============================================================
-// EMOTION COLORS & EMOJIS
+// EMOTION COLORS
 // ============================================================
 
 const EMOTIONS_CONFIG = [
-  { key: 'happy', label: 'Happy', emoji: '😄', color: '#f59e0b' },
-  { key: 'neutral', label: 'Neutral', emoji: '😐', color: '#94a3b8' },
-  { key: 'surprise', label: 'Surprise', emoji: '😲', color: '#ec4899' },
-  { key: 'sad', label: 'Sad', emoji: '😢', color: '#3b82f6' },
-  { key: 'fear', label: 'Fear', emoji: '😨', color: '#a855f7' },
-  { key: 'angry', label: 'Angry', emoji: '😠', color: '#ef4444' },
-  { key: 'disgust', label: 'Disgust', emoji: '🤢', color: '#10b981' },
+  { key: 'happy', label: 'Happy', color: '#bd7725' },
+  { key: 'neutral', label: 'Neutral', color: '#77828b' },
+  { key: 'surprise', label: 'Surprise', color: '#a45174' },
+  { key: 'sad', label: 'Sad', color: '#547eaa' },
+  { key: 'fear', label: 'Fear', color: '#7562a0' },
+  { key: 'angry', label: 'Angry', color: '#b6524b' },
+  { key: 'disgust', label: 'Disgust', color: '#43836b' },
 ];
 
 // ============================================================
@@ -30,7 +30,7 @@ export default function ProbabilityBars({ probabilities = {}, topEmotion = '' })
           <div key={key} className={`prob-item ${isTop ? 'is-top' : ''}`}>
             <div className="prob-item-header">
               <span className="prob-item-label">
-                <span>{emoji}</span>
+                <span className="prob-item-dot" style={{ backgroundColor: color }} />
                 <span>{label}</span>
               </span>
               <span className="prob-item-val" style={{ color: isTop ? color : undefined }}>

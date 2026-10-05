@@ -1,134 +1,150 @@
 {
   "model": "EmotionCNN",
+  "inference": "average_softmax(original_face, horizontal_flip(face))",
+  "test_evaluation": "single final evaluation of the validation-selected flip-averaged inference",
+  "test_samples": 7178,
   "parameters": 2312007,
   "size_mb": 8.82,
-  "test_accuracy": 66.24,
-  "macro_f1": 62.91,
-  "weighted_f1": 65.91,
-  "mean_latency_ms": 3.64,
-  "cpu_fps": 274.8,
+  "test_accuracy": 66.58,
+  "macro_f1": 63.18,
+  "weighted_f1": 66.24,
+  "mean_latency_ms_batch1_cpu": 15.11,
+  "cpu_fps_batch1_model_only": 66.2,
+  "batched_test_inference_seconds_cpu": 92.49,
+  "batched_test_throughput_images_per_second_cpu": 77.6,
   "target_accuracy_65_met": true,
+  "target_accuracy_70_met": false,
   "target_fps_15_met": true,
   "class_report": {
     "angry": {
-      "precision": 0.5941422594142259,
-      "recall": 0.592901878914405,
-      "f1-score": 0.593521421107628,
+      "precision": 0.5983086680761099,
+      "recall": 0.5908141962421712,
+      "f1-score": 0.5945378151260504,
       "support": 958.0
     },
     "disgust": {
-      "precision": 0.42934782608695654,
-      "recall": 0.7117117117117117,
-      "f1-score": 0.535593220338983,
+      "precision": 0.430939226519337,
+      "recall": 0.7027027027027027,
+      "f1-score": 0.5342465753424658,
       "support": 111.0
     },
     "fear": {
-      "precision": 0.5537414965986395,
-      "recall": 0.3974609375,
-      "f1-score": 0.46276293348493464,
+      "precision": 0.5606694560669456,
+      "recall": 0.392578125,
+      "f1-score": 0.4618035611717404,
       "support": 1024.0
     },
     "happy": {
-      "precision": 0.8811188811188811,
-      "recall": 0.8523111612175873,
-      "f1-score": 0.8664756446991404,
+      "precision": 0.8843457943925234,
+      "recall": 0.8534385569334837,
+      "f1-score": 0.8686173264486517,
       "support": 1774.0
     },
     "neutral": {
-      "precision": 0.5850388143966125,
-      "recall": 0.6723438767234388,
-      "f1-score": 0.6256603773584906,
+      "precision": 0.5900490539593553,
+      "recall": 0.6828872668288727,
+      "f1-score": 0.6330827067669172,
       "support": 1233.0
     },
     "sad": {
-      "precision": 0.5447087776866284,
-      "recall": 0.5324779470729751,
-      "f1-score": 0.5385239253852393,
+      "precision": 0.5420336269015212,
+      "recall": 0.5429029671210907,
+      "f1-score": 0.5424679487179487,
       "support": 1247.0
     },
     "surprise": {
-      "precision": 0.7318611987381703,
-      "recall": 0.8375451263537906,
-      "f1-score": 0.7811447811447811,
+      "precision": 0.7399577167019028,
+      "recall": 0.8423586040914561,
+      "f1-score": 0.7878446820483962,
       "support": 831.0
     },
-    "accuracy": 0.6624407913067707,
+    "accuracy": 0.665784341042073,
     "macro avg": {
-      "precision": 0.617137036291445,
-      "recall": 0.6566789484991299,
-      "f1-score": 0.6290974719313139,
+      "precision": 0.6209005060882422,
+      "recall": 0.6582403455599681,
+      "f1-score": 0.6318000879460243,
       "support": 7178.0
     },
     "weighted avg": {
-      "precision": 0.6625471497511912,
-      "recall": 0.6624407913067707,
-      "f1-score": 0.6591183198430354,
+      "precision": 0.6662468931851228,
+      "recall": 0.665784341042073,
+      "f1-score": 0.6623613848969975,
       "support": 7178.0
     }
   },
   "confusion_matrix": [
     [
-      568,
-      42,
-      81,
-      33,
-      108,
-      101,
+      566,
+      43,
+      74,
+      28,
+      110,
+      112,
       25
     ],
     [
-      20,
-      79,
-      5,
+      22,
+      78,
+      4,
       1,
       2,
       3,
       1
     ],
     [
-      116,
-      21,
-      407,
-      25,
-      109,
-      214,
-      132
+      119,
+      23,
+      402,
+      24,
+      111,
+      219,
+      126
     ],
     [
-      31,
-      8,
-      21,
-      1512,
-      100,
-      49,
-      53
-    ],
-    [
-      79,
-      11,
-      53,
-      67,
-      829,
-      171,
-      23
-    ],
-    [
-      123,
-      18,
-      122,
-      50,
-      249,
-      664,
-      21
-    ],
-    [
+      30,
+      9,
       19,
+      1514,
+      103,
+      50,
+      49
+    ],
+    [
+      73,
+      9,
+      49,
+      66,
+      842,
+      169,
+      25
+    ],
+    [
+      118,
+      14,
+      128,
+      51,
+      239,
+      677,
+      20
+    ],
+    [
+      18,
       5,
-      46,
+      41,
       28,
       20,
-      17,
-      696
+      19,
+      700
     ]
-  ]
+  ],
+  "confusion_matrix_labels": [
+    "angry",
+    "disgust",
+    "fear",
+    "happy",
+    "neutral",
+    "sad",
+    "surprise"
+  ],
+  "selection_note": "Flip TTA was selected using the fixed validation split (65.34% vs 64.94% single-view); the held-out test split was reserved for this final report."
 }
