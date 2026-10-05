@@ -62,7 +62,8 @@ def detect_faces(image: np.ndarray) -> tuple[list[dict], list[np.ndarray]]:
         minSize=(30, 30)
     )
 
-
+    boxes = []
+    face_crops = []
     img_h, img_w = image.shape[:2]
     for (x, y, w, h) in detected:
         boxes.append({
@@ -89,4 +90,3 @@ def detect_faces(image: np.ndarray) -> tuple[list[dict], list[np.ndarray]]:
             face_crops.append(image)
 
     return boxes, face_crops
-

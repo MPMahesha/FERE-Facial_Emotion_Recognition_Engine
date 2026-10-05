@@ -1,5 +1,5 @@
 import React from 'react';
-import { Activity, Server, Cpu, Sparkles } from 'lucide-react';
+import { Activity, Cpu, ScanFace, Server, Sparkles } from 'lucide-react';
 
 // ============================================================
 // HEADER COMPONENT
@@ -10,12 +10,13 @@ export default function Header({ isApiOnline, isMockMode, modelFile, fps }) {
     <header className="header-card">
       <div className="header-left">
         <div className="header-logo">
-          🎭
+          <ScanFace size={26} strokeWidth={1.8} />
         </div>
         <div className="header-title-box">
-          <h1>Facial Emotion Recogniser</h1>
+          <span className="header-kicker">FER-2013 · SEVEN-CLASS MODEL</span>
+          <h1>Facial expression analysis</h1>
           <p className="header-subtitle">
-            P9 MSc Data Science Project &bull; Real-Time Browser Emotion Engine
+            Real-time emotion recognition from a live camera feed.
           </p>
         </div>
       </div>

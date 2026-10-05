@@ -8,9 +8,12 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent
 
 # Centralized dataset path as requested
-DATASET_PATH = Path(os.environ.get("FER_DATASET_PATH", r"D:\Backup - 200626 1100\NNDL\archive"))
+DATASET_PATH = Path(os.environ.get("FER_DATASET_PATH", r"Dataset\archive"))
 TRAIN_PATH = DATASET_PATH / "train"
 TEST_PATH = DATASET_PATH / "test"
+
+
+
 
 # Official 7 emotion classes in canonical order
 EMOTIONS = ["angry", "disgust", "fear", "happy", "neutral", "sad", "surprise"]

@@ -1,4 +1,5 @@
 import React from 'react';
+import { ScanFace } from 'lucide-react';
 
 // ============================================================
 // EMOTION VISUAL MAPPER
@@ -21,15 +22,17 @@ const EMOTION_MAP = {
 export default function EmotionResult({ primaryEmotion, confidence, hasFace, isSmoothingActive }) {
   if (!hasFace || !primaryEmotion) {
     return (
-      <div className="emotion-card">
-        <div className="emotion-emoji">👤</div>
+      <div className="emotion-card emotion-card-empty" role="status">
+        <div className="emotion-mark">
+          <ScanFace size={30} strokeWidth={1.7} />
+        </div>
         <div className="emotion-info">
-          <span className="emotion-label-title">Status</span>
+          <span className="emotion-label-title">Live prediction</span>
           <h2 className="emotion-name" style={{ color: '#94a3b8' }}>
-            No Face Detected
+            Waiting for a face
           </h2>
           <p className="emotion-confidence-text">
-            Align your face within the camera frame for real-time recognition.
+            Position your face in the camera view to begin analysis.
           </p>
         </div>
       </div>
@@ -37,7 +40,6 @@ export default function EmotionResult({ primaryEmotion, confidence, hasFace, isS
   }
 
   const emotionData = EMOTION_MAP[primaryEmotion.toLowerCase()] || {
-    emoji: '🎭',
     label: primaryEmotion,
     color: '#6366f1'
   };
@@ -46,19 +48,13 @@ export default function EmotionResult({ primaryEmotion, confidence, hasFace, isS
 
   return (
     <div className="emotion-card" style={{ borderColor: `${emotionData.color}40` }}>
-      {/* Background glow matching the emotion's tone */}
-      <div
-        className="emotion-card-glow"
-        style={{ backgroundColor: emotionData.color }}
-      ></div>
-
-      <div className="emotion-emoji">
-        {emotionData.emoji}
+      <div className="emotion-mark" style={{ color: emotionData.color }}>
+        <ScanFace size={30} strokeWidth={1.7} />
       </div>
 
       <div className="emotion-info">
         <span className="emotion-label-title">
-          Detected Emotion {isSmoothingActive && '(Smoothed)'}
+          Live prediction {isSmoothingActive && <span className="smooth-tag">SMOOTHED</span>}
         </span>
         <h2 className="emotion-name" style={{ color: emotionData.color }}>
           {emotionData.label}

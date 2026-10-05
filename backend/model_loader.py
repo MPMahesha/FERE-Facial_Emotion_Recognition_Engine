@@ -309,7 +309,10 @@ def predict_emotion(
     model.eval()
     with torch.no_grad():
         outputs = model(tensor)
-        probs = F.softmax(outputs, dim=1).squeeze(0).cpu().numpy()
+        flipped_outputs = model(torch.flip(tensor, dims=[3]))
+        probs = (
+            (F.softmax(outputs, dim=1) + F.softmax(flipped_outputs, dim=1)) / 2
+        ).squeeze(0).cpu().numpy()
 
     probabilities = {
         EMOTIONS[i]: round(float(probs[i]), 4)

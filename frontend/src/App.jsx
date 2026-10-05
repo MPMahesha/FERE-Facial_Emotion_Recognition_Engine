@@ -3,7 +3,7 @@ import Header from './components/Header';
 import Webcam from './components/Webcam';
 import EmotionResult from './components/EmotionResult';
 import ProbabilityBars from './components/ProbabilityBars';
-import { Sliders, History, Download, Trash2, ShieldAlert } from 'lucide-react';
+import { Sliders, History, Download, Trash2 } from 'lucide-react';
 import './styles/style.css';
 
 const API_BASE_URL = 'http://localhost:8000';
@@ -31,14 +31,14 @@ export default function App() {
   // Smoothing & Performance Controls
   const [enableSmoothing, setEnableSmoothing] = useState(true);
   const [smoothingWeight, setSmoothingWeight] = useState(0.4); // Exponential Moving Average Alpha
-  const [captureInterval, setCaptureInterval] = useState(200); // ms per request (~5 FPS)
+  const [captureInterval, setCaptureInterval] = useState(50); // ms capture cadence; actual FPS depends on inference time
   const [showBoundingBoxes, setShowBoundingBoxes] = useState(true);
 
   // Prediction History Logs
   const [predictionLogs, setPredictionLogs] = useState([]);
 
   // Internal References for Smoothing & FPS Calculation
-  const smoothedProbsRef = useRef({});
+  const smoothedProbsRef = useRef([]);
   const lastFrameTimeRef = useRef(Date.now());
   const isRequestInFlight = useRef(false);
 
@@ -72,21 +72,27 @@ export default function App() {
   // PREDICTION SMOOTHING ENGINE (EXPONENTIAL MOVING AVERAGE)
   // ============================================================
 
-  const applyPredictionSmoothing = (rawProbs) => {
-    if (!enableSmoothing || Object.keys(smoothedProbsRef.current).length === 0) {
-      smoothedProbsRef.current = { ...rawProbs };
-      return rawProbs;
+  const applyPredictionSmoothing = (rawProbs, currentEmotion, faceIndex) => {
+    const previousProbs = smoothedProbsRef.current[faceIndex];
+    if (!enableSmoothing || !previousProbs) {
+      smoothedProbsRef.current[faceIndex] = { ...rawProbs };
+      return { ...rawProbs };
     }
 
+    const previousEmotion = Object.entries(previousProbs)
+      .reduce((top, entry) => entry[1] > top[1] ? entry : top)[0];
+    const alpha = currentEmotion !== previousEmotion
+      ? Math.max(smoothingWeight, 0.85)
+      : smoothingWeight;
     const smoothed = {};
     EMOTIONS_LIST.forEach((emotion) => {
       const currentVal = rawProbs[emotion] || 0;
-      const prevVal = smoothedProbsRef.current[emotion] || currentVal;
+      const prevVal = previousProbs[emotion] || currentVal;
       // Exponential Moving Average: S_t = alpha * Y_t + (1 - alpha) * S_{t-1}
-      smoothed[emotion] = parseFloat((smoothingWeight * currentVal + (1 - smoothingWeight) * prevVal).toFixed(4));
+      smoothed[emotion] = parseFloat((alpha * currentVal + (1 - alpha) * prevVal).toFixed(4));
     });
 
-    smoothedProbsRef.current = smoothed;
+    smoothedProbsRef.current[faceIndex] = smoothed;
     return smoothed;
   };
 
@@ -123,27 +129,25 @@ export default function App() {
 
         if (data.faces && data.faces.length > 0) {
           setHasFace(true);
-          setFaces(data.faces);
 
-          // Focus on the primary detected face
-          const primaryFace = data.faces[0];
-          const rawProbs = primaryFace.probabilities;
-          const finalProbs = applyPredictionSmoothing(rawProbs);
-
-          // Find dominant emotion after smoothing
-          let maxEmotion = primaryFace.emotion;
-          let maxScore = finalProbs[maxEmotion] || primaryFace.confidence;
-
-          Object.entries(finalProbs).forEach(([emo, score]) => {
-            if (score > maxScore) {
-              maxScore = score;
-              maxEmotion = emo;
-            }
+          const smoothedFaces = data.faces.map((face, index) => {
+            const finalProbs = applyPredictionSmoothing(
+              face.probabilities,
+              face.emotion,
+              index
+            );
+            const [emotion, score] = Object.entries(finalProbs)
+              .reduce((top, entry) => entry[1] > top[1] ? entry : top);
+            return { ...face, emotion, confidence: score, probabilities: finalProbs };
           });
+          const primaryFace = smoothedFaces[0];
+          const maxEmotion = primaryFace.emotion;
+          const maxScore = primaryFace.confidence;
 
           setPrimaryEmotion(maxEmotion);
           setConfidence(maxScore);
-          setProbabilities(finalProbs);
+          setProbabilities(primaryFace.probabilities);
+          setFaces(smoothedFaces);
 
           // Log prediction to history
           const newLog = {
@@ -157,7 +161,7 @@ export default function App() {
         } else {
           setHasFace(false);
           setFaces([]);
-          smoothedProbsRef.current = {};
+          smoothedProbsRef.current = [];
         }
       } catch (err) {
         console.error('Frame processing failed:', err);
@@ -253,7 +257,7 @@ export default function App() {
                 </label>
                 <input
                   type="range"
-                  min="100"
+                  min="50"
                   max="1000"
                   step="50"
                   value={captureInterval}
@@ -261,7 +265,7 @@ export default function App() {
                   className="range-slider"
                 />
                 <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
-                  Approx. {(1000 / captureInterval).toFixed(1)} inferences per second
+                  Capture cadence up to {(1000 / captureInterval).toFixed(1)} frames/sec; actual speed depends on inference time.
                 </span>
               </div>
             </div>

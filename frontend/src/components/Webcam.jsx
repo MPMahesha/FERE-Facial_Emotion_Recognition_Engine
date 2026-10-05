@@ -67,8 +67,8 @@ export default function Webcam({
       const conf = ((face.confidence || 0) * 100).toFixed(0);
 
       // Draw bounding box
-      ctx.strokeStyle = '#6366f1';
-      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#1b8174';
+      ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.roundRect(x, y, width, height, 8);
       ctx.stroke();
@@ -79,7 +79,7 @@ export default function Webcam({
       const textWidth = ctx.measureText(labelText).width;
       const tagHeight = 24;
 
-      ctx.fillStyle = '#6366f1';
+      ctx.fillStyle = '#1b8174';
       ctx.beginPath();
       ctx.roundRect(x, Math.max(0, y - tagHeight - 4), textWidth + 16, tagHeight, 4);
       ctx.fill();
@@ -151,6 +151,9 @@ export default function Webcam({
           </div>
         )}
       </div>
+      <p className="privacy-note">
+        Camera frames are processed for live predictions only and are never stored.
+      </p>
     </div>
   );
 }
