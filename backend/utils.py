@@ -49,7 +49,10 @@ def detect_faces(image: np.ndarray) -> tuple[list[dict], list[np.ndarray]]:
         - boxes: list of bounding box dicts with x, y, width, height
         - face_crops: list of cropped face sub-images (BGR)
     """
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    if len(image.shape) == 3:
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    else:
+        gray = image
 
     # Detect faces with standard scaling and neighbor parameters
     detected = face_cascade.detectMultiScale(
@@ -62,6 +65,7 @@ def detect_faces(image: np.ndarray) -> tuple[list[dict], list[np.ndarray]]:
     boxes = []
     face_crops = []
 
+    img_h, img_w = image.shape[:2]
     for (x, y, w, h) in detected:
         boxes.append({
             "x": int(x),
@@ -69,8 +73,22 @@ def detect_faces(image: np.ndarray) -> tuple[list[dict], list[np.ndarray]]:
             "width": int(w),
             "height": int(h)
         })
-        # Crop the detected face region
-        cropped = image[y:y + h, x:x + w]
+        # Add natural margin around crop to include full forehead and chin (matching FER-2013)
+        pad_y = int(0.10 * h)
+        pad_x = int(0.05 * w)
+        y1 = max(0, y - pad_y)
+        y2 = min(img_h, y + h + pad_y)
+        x1 = max(0, x - pad_x)
+        x2 = min(img_w, x + w + pad_x)
+        cropped = image[y1:y2, x1:x2]
         face_crops.append(cropped)
 
+    # Fallback for pre-cropped face images (e.g. FER-2013 benchmark samples <= 128x128)
+    if not boxes:
+        h, w = image.shape[:2]
+        if h <= 128 and w <= 128:
+            boxes.append({"x": 0, "y": 0, "width": int(w), "height": int(h)})
+            face_crops.append(image)
+
     return boxes, face_crops
+
