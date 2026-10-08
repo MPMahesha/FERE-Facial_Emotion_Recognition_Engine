@@ -1,193 +1,107 @@
-# P9: Real-Time Facial Emotion Recogniser in the Browser
+# Real-Time Facial Emotion Recogniser
 
-**MSc Data Science Project**
+P9 MSc Data Science project by Amal and Mahesha. A React webcam application sends frames to a
+FastAPI service, which detects faces with OpenCV and classifies each detected face into one of
+the seven FER-2013 emotions: angry, disgust, fear, happy, neutral, sad, and surprise.
 
-An end-to-end web application that performs real-time facial emotion recognition from a live browser webcam stream.
+## Run locally
 
----
+Requirements: Python 3.10 or newer and Node.js 18 or newer.
 
-## 🎭 Supported Emotions (FER-2013)
-
-The application classifies 7 facial emotion categories:
-1. **Angry** 😠
-2. **Disgust** 🤢
-3. **Fear** 😨
-4. **Happy** 😄
-5. **Neutral** 😐
-6. **Sad** 😢
-7. **Surprise** 😲
-
----
-
-## 🏛️ Project Architecture & Data Flow
-
-```text
-+-----------------------+           +------------------------+
-|  React Frontend (UI)  |  Base64   |    FastAPI Backend     |
-|  - Glassmorphism UI   | --------> |  - OpenCV Haar Cascade |
-|  - React Webcam       |  Frame    |  - Face Bounding Box   |
-|  - Prediction Smooth  | <-------- |  - PyTorch CNN / Mock  |
-|  - Probability Bars   |   JSON    |  - 7-Class Softmax     |
-+-----------------------+           +------------------------+
-```
-
-1. **Browser Webcam**: Streams video and periodically captures frames as base64 JPEG strings.
-2. **FastAPI (`/predict`)**: Receives the frame, decodes it into an OpenCV image matrix (`numpy.ndarray`).
-3. **OpenCV Face Detection**: Uses standard Haar Cascade classifier (`haarcascade_frontalface_default.xml`) to identify face bounding boxes `(x, y, width, height)`.
-4. **PyTorch Inference**: Crops each detected face, resizes to 48x48 grayscale, normalizes pixel intensities `[0, 1]`, and passes through the CNN model (`EmotionCNN`).
-   - *Phase 1 Fallback*: When no `.pth` weights are present, the backend utilizes an internal mock prediction engine with realistic probability distributions.
-5. **Response & UI Visualization**: Returns face coordinates, dominant emotion, confidence percentage, and full 7-class probability distributions to update the glassmorphism UI in real-time.
-
----
-
-## 📁 Directory Structure
-
-```text
-FERE-Facial_Emotion_Recognition_Engine/
-│
-├── backend/
-│   ├── __init__.py          # Package marker
-│   ├── main.py              # FastAPI endpoints (/predict, /status, /) & CORS setup
-│   ├── model_loader.py      # PyTorch EmotionCNN architecture & mock fallback engine
-│   └── utils.py             # Image decoding & OpenCV Haar Cascade face detection
-│
-├── frontend/
-│   ├── package.json         # React 18 & Vite configuration
-│   ├── index.html           # HTML5 shell with Google Fonts
-│   ├── vite.config.js       # Vite bundler configuration
-│   ├── src/
-│   │   ├── main.jsx         # React DOM mount point
-│   │   ├── App.jsx          # Main application container, smoothing & logging
-│   │   ├── components/
-│   │   │   ├── Header.jsx           # App title & dynamic system status badges
-│   │   │   ├── Webcam.jsx           # Live webcam stream & bounding box canvas overlay
-│   │   │   ├── EmotionResult.jsx    # Dominant emotion highlight card with dynamic glow
-│   │   │   └── ProbabilityBars.jsx  # 7-class probability distribution bars
-│   │   └── styles/
-│   │       └── style.css            # Glassmorphism aesthetic stylesheet
-│   └── public/
-│
-├── models/
-│   ├── emotion_cnn.pth      # Trained VGG-style FER-2013 checkpoint
-│   ├── final_evaluation_metrics.json
-│   ├── experiments_comparison.json
-│   ├── model_comparison.json
-│   ├── confusion_matrix.png
-│   └── feature_maps_analysis.png
-├── config.py                # Dataset paths, class names, split and seed
-├── data_pipeline.py         # FER-2013 loading, augmentation and class weights
-├── notebooks/               # EDA, training, transfer learning and evaluation scripts
-│
-├── requirements.txt         # Python dependencies
-├── README.md                # Project documentation & viva guide
-└── .gitignore               # Ignored files (models, virtualenvs, node_modules)
-```
-
----
-
-## 🚀 Getting Started
-
-### 1. Backend Setup (FastAPI + OpenCV + PyTorch)
-
-Make sure you have Python 3.10+ installed.
+Install the Python dependencies from the repository root:
 
 ```bash
-# Install Python dependencies
 pip install -r requirements.txt
+```
 
-# Start the FastAPI backend server (port 8000)
+Start the API from the repository root:
+
+```bash
 python -m uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-The backend documentation will be accessible at:
-- Swagger UI: `http://localhost:8000/docs`
-- Health check: `http://localhost:8000/status`
-
----
-
-### 2. Frontend Setup (React + Vite)
-
-Make sure you have Node.js 18+ installed.
+In another terminal, start the frontend:
 
 ```bash
-# Navigate to the frontend directory
 cd frontend
-
-# Install Node dependencies
 npm install
-
-# Start Vite development server (port 5173)
 npm run dev
 ```
 
-Open your browser at `http://localhost:5173`.
+Open the local URL printed by Vite (normally `http://localhost:5173`). The API status endpoint
+is `http://localhost:8000/status`; interactive API documentation is at
+`http://localhost:8000/docs`. Allow camera access in the browser. The frontend defaults to an API
+at `http://localhost:8000`.
 
----
+## Dataset and training
 
-## 🤝 Trained Model
+The training scripts expect FER-2013 in class folders:
 
-The repository includes the trained `models/emotion_cnn.pth` checkpoint. The API loads this
-checkpoint on startup. The final evaluation in `models/final_evaluation_metrics.json` reports
-66.58% FER-2013 test accuracy for the deployed horizontal-flip test-time-augmentation inference
-on all 7,178 test images. The earlier 66.24% result was the original single-view evaluation.
-
-### FER-2013 data location
-
-The training scripts expect `train/` and `test/` class folders under `Dataset/archive/` by
-default. Alternatively, set `FER_DATASET_PATH` to the absolute path to the FER-2013 archive
-before running the scripts. Keep the official `test/` directory separate; use the validation
-split for model selection and evaluate the test set only once for the final reported model.
-
----
-
-## 💡 Key Technical Features
-
-1. **Prediction Smoothing (Exponential Moving Average)**:
-   $$\text{Smoothed}_t = \alpha \cdot \text{Current}_t + (1 - \alpha) \cdot \text{Smoothed}_{t-1}$$
-   Eliminates visual jitter and rapid flickering across sequential video frames.
-2. **Face Bounding Box Overlay**:
-   Canvas overlay dynamically maps detected OpenCV face coordinates `(x, y, w, h)` onto the live video feed.
-3. **Prediction Logging & Export**:
-   Maintains a real-time log of emotion predictions and provides one-click export to CSV.
-4. **Graceful Handling of Edge Cases**:
-   Clear visual indicators when no face is present or camera permission is disabled.
-5. **Frame privacy**:
-   The web application processes live frames for prediction and does not store them.
-
----
-
-## Evaluation and submission readiness
-
-The repository contains the implementation and generated artifacts for EDA, the NumPy
-convolution-vs-PyTorch check, the VGG-style CNN, FER-2013 augmentation and square-root class
-weights, feature-map visualisation, and the saved confusion matrix and final metrics.
-The original single-view evaluation reported 66.24% test accuracy and 274.8 CNN-only CPU FPS.
-The final flip-averaged inference reports 66.58% accuracy, 63.18% macro F1, and 66.24% weighted
-F1 on the official 7,178-image test split. It measured 66.2 FPS for batch-1 two-pass model-only
-CPU inference; the full batched test evaluation processed 77.6 images/s. Neither figure is an
-end-to-end webcam FPS measurement.
-The final confusion matrix highlights the remaining errors: 239 of 1,247 sad faces were
-predicted neutral, and 219 of 1,024 fear faces were predicted sad. The square-root class weighting
-gives the minority disgust class 70.27% recall, while its 43.09% precision shows the remaining
-false-positive trade-off.
-
-The current API averages predictions from the original and horizontally flipped face crop.
-On the full validation split this measured 65.34% versus 64.94% for single-view inference.
-The final held-out test evaluation of this validation-selected inference measured 66.58%.
-
-The existing `models/model_comparison.json` is a legacy, short-run comparison and should not be
-used as a full transfer-learning result. The corrected transfer experiment upscales the
-grayscale images to 224×224, repeats them across three channels for ResNet-18 and EfficientNet-B0,
-trains on the full training split, evaluates on the full validation split, and benchmarks model
-latency on CPU. Run it on a GPU where available:
-
-```bash
-python notebooks/04_transfer_learning.py --epochs 10
+```text
+Dataset/archive/
+├── train/<emotion>/
+└── test/<emotion>/
 ```
 
-Before final submission, the team still needs to provide the 15–25 page report, 10–12 slide
-presentation, signed declaration, and a public app URL or 5–8 minute recorded demo. The report
-should include the per-class confusion analysis, architecture/latency table, limitations,
-contributions from both members, and honest test metrics for the final selected inference
-pipeline. Transfer-learning results in `models/model_comparison.json` are short-run exploratory
-figures, not full-data, fully trained comparison results.
+By default, `config.py` uses `Dataset/archive` relative to the project root. To use a different
+location, set `FER_DATASET_PATH` to the absolute path of the directory containing `train` and
+`test` before running the scripts. The data pipeline makes a fixed-seed, stratified validation
+split from `train`; the official `test` split is kept separate.
+
+Train the VGG-style CNN and save its best validation checkpoint to `models/emotion_cnn.pth`:
+
+```bash
+python notebooks/03_train_cnn.py --epochs 15
+```
+
+The API loads `models/emotion_cnn.pth` when it starts. The training pipeline uses 48×48 grayscale
+images, augmentation, batch normalization, dropout, and square-root-damped class weights to
+address FER-2013 class imbalance, especially the small disgust class.
+
+## Model work and evaluation
+
+- `notebooks/02_from_scratch.py` implements a 2D convolution with NumPy loops and checks its
+  output against PyTorch.
+- `notebooks/04_feature_map_analysis.py` generates layer-by-layer CNN feature-map visualisations.
+- `notebooks/04_transfer_learning.py` contains ResNet-18, EfficientNet-B0, and a small ViT for
+  architecture experiments. ResNet-18 and EfficientNet-B0 use upscaled 224×224 three-channel
+  inputs. Run the experiment on a machine with the FER-2013 data configured:
+
+  ```bash
+  python notebooks/04_transfer_learning.py --epochs 10
+  ```
+
+- `models/experiments_comparison.json` records CNN training ablations. The earlier
+  `models/model_comparison.json` contains short-run exploratory transfer results; do not treat
+  those figures as full-training model comparisons.
+- `models/final_evaluation_metrics.json` and `models/confusion_matrix.png` contain the final
+  held-out test results for the deployed horizontal-flip averaged inference.
+
+The final reported evaluation uses the original face crop and its horizontal flip, averaging
+their softmax probabilities. Results on all 7,178 official test images:
+
+| Test accuracy | Macro F1 | Weighted F1 | Parameters | Model size | Batch-1 CPU model FPS |
+|---:|---:|---:|---:|---:|---:|
+| 66.58% | 63.18% | 66.24% | 2,312,007 | 8.82 MB | 66.2 |
+
+Accuracy exceeds the project minimum of 65%; it does not reach 70%. The benchmark is model-only,
+not end-to-end webcam FPS. In the test confusion matrix, 239 of 1,247 sad faces were classified
+as neutral, and 219 of 1,024 fear faces as sad. Disgust recall was 70.27% and precision was
+43.09%.
+
+## Web application
+
+The frontend provides webcam controls, per-face labels and bounding boxes, temporally smoothed
+probabilities, a seven-class probability chart, and a prediction history that can be exported as
+CSV. Camera frames are processed for prediction and are never stored. The API exposes `POST
+/predict` for frame inference and `GET /status` for readiness and model status.
+
+## Main project files
+
+- `backend/` — FastAPI application, model loading, image preprocessing, and face detection.
+- `frontend/src/` — React application, webcam, prediction display, and styles.
+- `notebooks/` — EDA, from-scratch convolution, CNN training, feature-map analysis, architecture
+  experiments, and evaluation scripts.
+- `models/` — trained checkpoint and generated evaluation artifacts.
+- `config.py`, `data_pipeline.py` — dataset configuration, reproducible splits, transforms, and
+  class weights.
