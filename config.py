@@ -12,9 +12,6 @@ DATASET_PATH = Path(os.environ.get("FER_DATASET_PATH", r"Dataset\archive"))
 TRAIN_PATH = DATASET_PATH / "train"
 TEST_PATH = DATASET_PATH / "test"
 
-
-
-
 # Official 7 emotion classes in canonical order
 EMOTIONS = ["angry", "disgust", "fear", "happy", "neutral", "sad", "surprise"]
 NUM_CLASSES = len(EMOTIONS)
