@@ -1,0 +1,30 @@
+{
+  "labels": [
+    "sadness",
+    "joy",
+    "love",
+    "anger",
+    "fear",
+    "surprise"
+  ],
+  "label_to_index": {
+    "sadness": 0,
+    "joy": 1,
+    "love": 2,
+    "anger": 3,
+    "fear": 4,
+    "surprise": 5
+  },
+  "index_to_label": {
+    "0": "sadness",
+    "1": "joy",
+    "2": "love",
+    "3": "anger",
+    "4": "fear",
+    "5": "surprise"
+  },
+  "model_type": "TF-IDF (word 1-2 stopwords + char_wb 2-5) + LogisticRegression (balanced)",
+  "dataset": "dair-ai/emotion (config: split)",
+  "selected_C": 1.0,
+  "validation_macro_f1": 0.88
+}

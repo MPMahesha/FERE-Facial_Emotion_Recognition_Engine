@@ -1,0 +1,15 @@
+{
+  "pipeline": "FeatureUnion[word TF-IDF (1-2, stopwords) , char_wb TF-IDF (2-5)] -> LogisticRegression (class_weight=balanced)",
+  "random_seed": 42,
+  "selected_C": 1.0,
+  "labels": [
+    "sadness",
+    "joy",
+    "love",
+    "anger",
+    "fear",
+    "surprise"
+  ],
+  "test_accuracy": 0.893,
+  "test_macro_f1": 0.8554
+}

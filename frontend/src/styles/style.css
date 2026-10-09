@@ -911,3 +911,313 @@ body {
     gap: 16px;
   }
 }
+
+/* ============================================================
+   ANALYSIS MODE TABS
+   ============================================================ */
+
+.tab-bar {
+  display: inline-flex;
+  align-self: flex-start;
+  gap: 6px;
+  padding: 5px;
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: var(--glass-shadow);
+}
+
+.tab-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: #697773;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.tab-button:hover {
+  color: #1c2927;
+  background: #f5f8f7;
+}
+
+.tab-button.is-active {
+  color: #fff;
+  background: #18796e;
+  border-color: #18796e;
+  box-shadow: 0 4px 10px rgba(24, 121, 110, 0.18);
+}
+
+/* ============================================================
+   SPEECH & TEXT EMOTION SECTION
+   ============================================================ */
+
+.speech-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
+  align-items: start;
+  gap: 20px;
+}
+
+.speech-intro {
+  color: #697773;
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.speech-intro strong {
+  color: #1c2927;
+}
+
+.mic-control {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 20px;
+  border: 1px solid #e6ece9;
+  border-radius: 12px;
+  background: #f8faf9;
+}
+
+.mic-button {
+  position: relative;
+  flex: 0 0 auto;
+  width: 74px;
+  height: 74px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid #cfe0db;
+  background: #fff;
+  color: #18796e;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mic-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(24, 121, 110, 0.18);
+}
+
+.mic-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.mic-button.is-recording {
+  color: #fff;
+  background: #b6524b;
+  border-color: #b6524b;
+}
+
+.mic-button.is-recording::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(182, 82, 75, 0.5);
+  animation: mic-pulse 1.4s ease-out infinite;
+}
+
+@keyframes mic-pulse {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
+.mic-state {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mic-state-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1c2927;
+}
+
+.mic-state-hint {
+  font-size: 0.78rem;
+  color: #75817d;
+}
+
+.transcript-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.transcript-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #45534f;
+}
+
+.transcript-area {
+  width: 100%;
+  resize: vertical;
+  min-height: 96px;
+  padding: 14px 16px;
+  border: 1px solid #dce4e1;
+  border-radius: 10px;
+  background: #fff;
+  color: #1c2927;
+  font-family: inherit;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.transcript-area:focus {
+  outline: none;
+  border-color: #18796e;
+  box-shadow: 0 0 0 3px rgba(24, 121, 110, 0.12);
+}
+
+.transcript-area::placeholder {
+  color: #a9b4b0;
+}
+
+.transcript-meta {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.72rem;
+  color: #88938f;
+}
+
+.speech-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.spin {
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.speech-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.speech-alert svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+.speech-alert-error {
+  background: #fbefed;
+  border: 1px solid #f0d9d5;
+  color: #a3473f;
+}
+
+.speech-alert-success {
+  background: #edf6f1;
+  border: 1px solid #d8eade;
+  color: #277555;
+}
+
+.analyzed-text {
+  padding: 12px 14px;
+  border: 1px solid #e6ece9;
+  border-radius: 10px;
+  background: #f8faf9;
+  color: #45534f;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.analyzed-text-label {
+  display: block;
+  margin-bottom: 4px;
+  color: #88938f;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.speech-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 240px;
+  padding: 24px;
+  text-align: center;
+  color: #697773;
+}
+
+.speech-empty p {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #45534f;
+}
+
+.speech-empty-hint {
+  max-width: 300px;
+  font-size: 0.82rem !important;
+  font-weight: 400 !important;
+  color: #88938f !important;
+}
+
+@media (max-width: 1024px) {
+  .speech-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .tab-bar {
+    width: 100%;
+  }
+
+  .tab-button {
+    flex: 1;
+    justify-content: center;
+    padding: 9px 10px;
+    font-size: 0.8rem;
+  }
+
+  .mic-control {
+    gap: 16px;
+  }
+
+  .mic-button {
+    width: 64px;
+    height: 64px;
+  }
+}

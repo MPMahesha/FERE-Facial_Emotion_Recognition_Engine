@@ -3,7 +3,8 @@ import Header from './components/Header';
 import Webcam from './components/Webcam';
 import EmotionResult from './components/EmotionResult';
 import ProbabilityBars from './components/ProbabilityBars';
-import { Sliders, History, Download, Trash2 } from 'lucide-react';
+import SpeechEmotion from './components/SpeechEmotion';
+import { Sliders, History, Download, Trash2, ScanFace, AudioLines } from 'lucide-react';
 import './styles/style.css';
 
 const API_BASE_URL = 'http://localhost:8000';
@@ -14,6 +15,9 @@ const EMOTIONS_LIST = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 's
 // ============================================================
 
 export default function App() {
+  // Active analysis mode: 'face' or 'speech'
+  const [activeTab, setActiveTab] = useState('face');
+
   // System & API State
   const [isApiOnline, setIsApiOnline] = useState(false);
   const [isMockMode, setIsMockMode] = useState(true);
@@ -205,7 +209,34 @@ export default function App() {
         fps={isCameraActive ? fps : 0}
       />
 
-      {/* Main Interactive Grid */}
+      {/* Analysis mode tabs */}
+      <div className="tab-bar" role="tablist" aria-label="Analysis mode">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'face'}
+          className={`tab-button ${activeTab === 'face' ? 'is-active' : ''}`}
+          onClick={() => setActiveTab('face')}
+        >
+          <ScanFace size={17} />
+          Facial Emotion
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === 'speech'}
+          className={`tab-button ${activeTab === 'speech' ? 'is-active' : ''}`}
+          onClick={() => setActiveTab('speech')}
+        >
+          <AudioLines size={17} />
+          Voice &amp; Text Emotion
+        </button>
+      </div>
+
+      {activeTab === 'speech' ? (
+        <SpeechEmotion apiBaseUrl={API_BASE_URL} />
+      ) : (
+      /* Main Interactive Grid */
       <div className="main-grid">
         {/* Left Column: Live Webcam Stream */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -378,6 +409,7 @@ export default function App() {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }
